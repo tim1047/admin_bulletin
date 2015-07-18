@@ -1,13 +1,7 @@
 // routeConfig.js
-// setting mysql connection
-var mysql = require('mysql');
-
-var pool = mysql.createPool({
-	host:'localhost',
-	user:'feople',
-	password:'1234',
-	database:'project'
-});
+// setting for mongoDB connection (using mongojs module)
+var mongojs = require('mongojs');
+var db = mongojs('bulletin', ['bulletins']);
 
 // constructor
 function routeConfig(app){
@@ -23,169 +17,123 @@ routeConfig.prototype.route = function(){
     // Method : GET
     // API for getting all records of table
 	self.app.get('/getList', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "SELECT * FROM bulletin ORDER BY number DESC";
-			
-			conn.query(sql,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-                    res.json(result);
-				}
-            });
-            conn.release();
-		});
+        db.bulletins.find({}).sort({ _id : -1 }, function (err, result) {
+            console.log(result);
+            res.json(result);
+        });
 	});
     
     // URL : /getList/search/:select/:content
     // Method : GET
     // API for getting records which are searched
-	self.app.get('/getList/search/:select/:content', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "SELECT * FROM bulletin WHERE ?? REGEXP '" + req.params.content + "' ORDER BY number DESC";
-			var data = [req.params.select];
-
-			conn.query(sql,data,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-                    res.json(result);
-				}
+    self.app.get('/getList/search/:select/:content', function (req, res) {
+        var select = req.params.select;
+        var content = req.params.content;
+        
+        if (select == 'title') {
+            db.bulletins.find({ title : { $regex : content } }).sort({ _id : -1 }, function (err, result) {
+                console.log(result);
+                res.json(result);
             });
-            conn.release();
-		});
+        }
+        else if (select == 'id') {
+            db.bulletins.find({ id : { $regex : content } }).sort({ _id : -1 }, function (err, result) {
+                console.log(result);
+                res.json(result);
+            });
+        }
     });
     
     // URL : /getList/page/:page
     // Method : GET
     // API for getting records after paging
 	self.app.get('/getList/page/:page', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "SELECT * FROM bulletin ORDER BY number DESC LIMIT ?,10";
-			var data = Number(req.params.page);
-
-			conn.query(sql,data,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-                    res.json(result);
-				}
-            });
-            conn.release();
-		});
+        db.bulletins.find({}).limit(10).sort({ _id : -1 }).skip(req.params.page, function (err, result) {
+            console.log(result);
+            res.json(result);
+        });
 	});
     
     // URL : /getList/search/:select/:content/:page
     // Method : GET
     // API for getting records which are searched after paging
 	self.app.get('/getList/search/:select/:content/:page', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "SELECT * FROM bulletin WHERE ?? REGEXP '" + req.params.content + "' ORDER BY number DESC LIMIT ?,10";
-			var data = [req.params.select, Number(req.params.page)];
-
-			conn.query(sql,data,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-                    res.json(result);
-				}
+        var select = req.params.select;
+        var content = req.params.content;
+        
+        if (select == 'title') {
+            db.bulletins.find({ title : { $regex : content } }).limit(10).sort({ _id : -1 }).skip(req.params.page, function (err, result) {
+                console.log(result);
+                res.json(result);
             });
-            conn.release();
-		});
+        }
+        else if (select == 'id') {
+            db.bulletins.find({ id : { $regex : content } }).limit(10).sort({ _id : -1 }).skip(req.params.page, function (err, result) {
+                console.log(result);
+                res.json(result);
+            });
+        }
 	});
     
     // URL : /getList/:id
     // Method : GET
     // API for getting record using ID
 	self.app.get('/getList/:id', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "SELECT * FROM bulletin WHERE number= ?";
-			var data = [req.params.id];
+        var id = req.params.id;
 
-			conn.query(sql,data,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-                    res.json(result);
-				}
-            });
-            conn.release();
-		});
+        db.bulletins.find({_id : mongojs.ObjectId(id)}, function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log(result);
+                res.json(result);
+            }
+        });
 	});
     
     // URL : /write
     // Method : POST
     // API for inserting record 
-	self.app.post('/write', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "INSERT INTO bulletin(title,content,date,id,password) VALUES(?,?,now(),?,?)";
-			var data = [req.body.title, req.body.content, req.body.id, req.body.password];
-
-			conn.query(sql,data,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-					res.json(result);
-				}
-            });
-            conn.release();
-		});
-	});
+    self.app.post('/write', function (req, res) {
+        db.bulletins.insert(req.body, function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.json(result);
+            }
+        });
+    });
     
     // URL : /remove/:id
     // Method : GET
     // API for deleting record using ID
-	self.app.get('/remove/:id', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "DELETE FROM bulletin WHERE number=?";
-			var data = [req.params.id];
+    self.app.get('/remove/:id', function (req, res){
+        var id = req.params.id;
 
-			conn.query(sql,data,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-					res.json(result);
-				}
-            });
-            conn.release();
-		});
+        db.bulletins.remove({_id : mongojs.ObjectId(id)}, function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.json(result);
+            }
+        });
 	});
     
     // URL : /update
-    // Method : PUT
+    // Method : POST
     // API for updating record
-	self.app.put('/update', function(req, res){
-		pool.getConnection(function(err,conn){
-			var sql = "UPDATE bulletin SET title=?, content=?, date=now() WHERE number=?";
-			var data = [req.body.title, req.body.content, req.body.number];
+    self.app.post('/update', function (req, res) {
+        var id = req.body._id;
 
-			conn.query(sql,data,function(err,result){
-				if(err){
-					console.log(err);
-				}
-				else{
-					console.log(result);
-					res.json(result);
-				}
-            });
-            conn.release();
-		});
-	});
-
+        db.bulletins.update({ _id : mongojs.ObjectId(id) },
+                            { $set : { title : req.body.title, content : req.body.content, id : req.body.id, password : req.body.password } },
+                             function (err, result){
+                                res.json(result);
+                            });
+    });                            
 };
 
 module.exports = routeConfig;

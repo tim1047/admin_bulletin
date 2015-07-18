@@ -1,0 +1,2 @@
+C:\Users\Kang-won\Desktop\Projects\bulletinList\bulletinList\obj\Debug\bulletinList.njsprojResolveAssemblyReference.cache
+C:\Users\Kang-won\Desktop\Projects\bulletinList\bulletinList\bin\Microsoft.NodejsTools.WebRole.dll

@@ -222,7 +222,8 @@ app.controller('writeController', function ($scope, $http, $location) {
     
     // function for writing
     $scope.writeID = function () {
-        
+        $scope.formData.date = Date.now();
+
         // HTTP request for writing 
         $http.post('/write', $scope.formData).success(function (data) {
             alert('작성이 완료되었습니다.');
@@ -271,7 +272,8 @@ app.controller('updateController', function ($scope, $http, $location, $window, 
     
     // function for updating
     $scope.update = function () {
-        
+        $scope.result.date = Date.now();
+
         // HTTP request for updating 
         if (confirm('수정을 하시겠습니까?')) {
             $http.post('/update', $scope.result).success(function (data) {
