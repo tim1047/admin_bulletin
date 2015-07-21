@@ -6,27 +6,52 @@
         <p>	{{ message }}</p>
     </center>
 
-    <div class='container'>
-        <form name="form" novalidate>
-            <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
-                <label for="inputForTitle">제목</label>
-                <input type="text" class="form-control" name='title' ng-model='result.title' required>
-                <p ng-show="form.title.$invalid && !form.title.$pristine" class='help-block'>제목을 입력하세요.</p>
-            </div>
-            <div class="form-group">
-                <label for="inputForID">작성자</label>
-                <input type="text" class="form-control" ng-model="result.id" disabled>
-            </div>
-            <div class="form-group">
-                <label for="inputForPassword">비밀번호</label>
-                <input type="password" class="form-control" ng-model='result.password' disabled>
-            </div>
-            <div class="form-group" ng-class="{ 'has-error' : form.content.$invalid && !form.content.$pristine }">
-                <label for="inputForContent">내용</label>
-                <textarea class="form-control" rows="3" cols="5" name='content' ng-model='result.content' required></textarea>
-                <p ng-show="form.content.$invalid && !form.content.$pristine" class='help-block'>내용을 입력하세요.</p>
-            </div>
-            <button type="button" class="btn btn-info" ng-click="update()" ng-disabled="!form.$valid">수정</button>
+    <div class="container">
+        <form class="form-horizontal" name="form" novalidate>
+                <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
+                    <label for="inputTitle" class="col-md-3 control-label">제목</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="title" name="title" ng-model='result.title' placeholder="제목을 입력해주세요" required>
+                        <p ng-show="form.title.$invalid && !form.title.$pristine" class="help-block">제목을 입력하세요.</p>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <label for="inputId" class="col-md-3 control-label">작성자</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="id" name="id" ng-model='result.id' disabled>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <label for="inputPassword" class="col-md-3 control-label">비밀번호</label>
+                    <div class="col-md-6">
+                        <input type="password" class="form-control" id="password" name="password" ng-model="result.password" disabled>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group" ng-class="{ 'has-error' : form.content.$invalid && !form.content.$pristine }">
+                    <label for="inputContent" class="col-md-3 control-label">내용</label>
+                    <div class="col-md-6">
+                        <textarea class="form-control" rows="10" cols="5" name='content' ng-model='result.content' placeholder='내용을 입력하세요' ng-focus required></textarea>
+                        <p ng-show="form.content.$invalid && !form.content.$pristine" class='help-block'>내용을 입력하세요.</p>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-offset-8 col-md-2">
+                        <button type="button" class="btn btn-primary" ng-click="update()" ng-disabled="!form.$valid">수정</button>
+                        <a class="btn btn-primary" href="#/">취소</a>
+                    </div>
+                </div>
         </form>
     </div>
 </div>

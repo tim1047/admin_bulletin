@@ -5,30 +5,54 @@
 
         <p>	{{ message }}</p>
     </center>
-
-    <div class='container'>
-        <form name="form" novalidate>
+    
+    <div class="container">
+        <form class="form-horizontal" name="form" novalidate>
             <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
-                <label for="inputForTitle">제목</label>
-                <input type="text" class="form-control" name="title" ng-model='formData.title' placeholder="제목을 입력하세요" required>
-                <p ng-show="form.title.$invalid && !form.title.$pristine" class="help-block">제목을 입력하세요.</p>
+                <label for="inputTitle" class="col-md-3 control-label">제목</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="title" name="title" ng-model='formData.title' placeholder="제목을 입력해주세요" ng-focus required>
+                    <p ng-show="form.title.$invalid && !form.title.$pristine" class="help-block">제목을 입력하세요.</p>
+                </div>
             </div>
+
+            <br />
+
             <div class="form-group" ng-class="{ 'has-error' : form.id.$invalid && !form.id.$pristine }">
-                <label for="inputForID">ID</label>
-                <input type="text" class="form-control" name='id' ng-model='formData.id' placeholder="ID를 입력하세요" required>
-                <p ng-show="form.id.$invalid && !form.id.$pristine" class='help-block'>ID를 입력하세요.</p>            
+                <label for="inputId" class="col-md-3 control-label">작성자</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="id" name="id" ng-model='formData.id' placeholder="ID를 입력해주세요" required>
+                    <p ng-show="form.id.$invalid && !form.id.$pristine" class='help-block'>ID를 입력하세요.</p>
+                </div>
             </div>
+
+            <br />
+
             <div class="form-group" ng-class="{ 'has-error' : form.password.$invalid && !form.password.$pristine }">
-                <label for="inputForPassword">비밀번호</label>
-                <input type="password" class="form-control" name='password' ng-model='formData.password' placeholder="비밀번호를 입력하세요" required>
-                <p ng-show="form.password.$invalid && !form.password.$pristine" class='help-block'>Password를 입력하세요.</p>
+                <label for="inputPassword" class="col-md-3 control-label">비밀번호</label>
+                <div class="col-md-6">
+                    <input type="password" class="form-control" id="password" name="password" ng-model="formData.password" placeholder=" 비밀번호를 입력해주세요" required>
+                    <p ng-show="form.password.$invalid && !form.password.$pristine" class='help-block'>Password를 입력하세요.</p>
+                </div>
             </div>
+
+            <br />
+
             <div class="form-group" ng-class="{ 'has-error' : form.content.$invalid && !form.content.$pristine }">
-                <label for="inputForContent">내용</label>
-                <textarea class="form-control" rows="3" cols="5" name='content' ng-model='formData.content' placeholder='글을 입력하세요' required></textarea>
-                <p ng-show="form.content.$invalid && !form.content.$pristine" class='help-block'>내용을 입력하세요.</p>
+                <label for="inputContent" class="col-md-3 control-label">내용</label>
+                <div class="col-md-6">
+                    <textarea class="form-control" rows="10" cols="5" name='content' ng-model='formData.content' placeholder='내용을 입력하세요' required></textarea>
+                    <p ng-show="form.content.$invalid && !form.content.$pristine" class='help-block'>내용을 입력하세요.</p>
+                </div>
             </div>
-            <button type="button" class="btn btn-info" ng-click="writeID()" ng-disabled="!form.$valid">작성</button>
+            
+            <br />
+
+            <div class="row">
+                <div class="col-md-offset-8 col-md-2">
+                    <button type="button" class="btn btn-primary col-md-4" ng-click="writeID()" ng-disabled="!form.$valid">작성</button> 
+                </div>
+            </div>
         </form>
     </div>
 </div>

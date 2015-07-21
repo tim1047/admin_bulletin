@@ -1,5 +1,5 @@
 // routeConfig.js
-// setting for mongoDB connection (using mongojs module)
+// setting for mongoDB connection (using 'mongojs' module)
 var mongojs = require('mongojs');
 var db = mongojs('bulletin', ['bulletins']);
 

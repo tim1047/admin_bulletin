@@ -50,6 +50,27 @@ app.filter('nl2br', function ($sce) {
     };
 });
 
+// add directive named 'ng-enter' for detecting enter key event
+app.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which == 13) {
+                scope.$apply(function () {
+                    scope.$eval(attrs.ngEnter);
+                });
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+// add directive name 'ng-focus' for focusing some input types
+app.directive('ngFocus', function () {
+    return function (scope, element) {
+        element[0].focus();
+    };
+});
+
 // add controller ( mainController <---> home.html )
 app.controller('mainController', function ($scope, $http, $location, $window, $routeParams) {
     

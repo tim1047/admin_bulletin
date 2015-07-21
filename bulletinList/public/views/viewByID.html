@@ -7,21 +7,21 @@
 
     <div class='container'>
         <div class='col-md-10 col-md-offset-1'>
-            <table class='table table-bordered table-hover'>
+            <table class='table table-bordered table-hover' >
                 <tr>
-                    <td class='info'>제목</td>
+                    <th class="text-center info">제목</th>
                     <td>{{result.title}}</td>
                 </tr>
                 <tr>
-                    <td class='info'>작성자</td>
+                    <th class="text-center info">작성자</th>
                     <td>{{result.id}}</td>
                 </tr>
                 <tr>
-                    <td class='info'>내용</td>
+                    <th class="text-center info">내용</th>
                     <td ng-bind-html='result.content | nl2br'></td>
                 </tr>
                 <tr>
-                    <td class='info'>날짜</td>
+                    <th class="text-center info">날짜</th>
                     <td>{{result.date | date : 'yyyy-M-d HH:mm:ss'}}</td>
                 </tr>
             </table>
@@ -30,8 +30,8 @@
 
     <div class='row'>
         <div class='col-md-1 col-md-offset-8'>
-            <a href='#/update/{{result._id}}' class="btn btn-info">수정</a>
-            <button type='button' class='btn btn-info' ng-click='removeByID()'>삭제</button>
+            <a href='#/update/{{result._id}}' class="btn btn-primary">수정</a>
+            <button type='button' class='btn btn-primary' ng-click='removeByID()'>삭제</button>
         </div>
     </div>
 </div>
