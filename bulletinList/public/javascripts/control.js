@@ -5,20 +5,14 @@ var app = angular.module('bulletinModule', ['ngRoute']);
 // route URL using routeProvider  
 app.config(function ($routeProvider) {
     $routeProvider
-
         .when('/', {
-        templateUrl : 'views/home.html',
-        controller  : 'mainController'
+        templateUrl : 'views/login.html',
+        controller  : 'loginController'
     })
 
         .when('/page/:num', {
         templateUrl : 'views/home.html',
         controller  : 'mainController'
-    })
-
-        .when('/page/search/:select/:content', {
-        templateUrl : 'views/homeBySearch.html',
-        controller  : 'mainControllerBySearch'
     })
 
         .when('/page/search/:select/:content/:page', {
@@ -64,21 +58,58 @@ app.directive('ngEnter', function () {
     };
 });
 
-// add directive name 'ng-focus' for focusing some input types
+// add directive named 'ng-focus' for focusing some input types
 app.directive('ngFocus', function () {
     return function (scope, element) {
         element[0].focus();
     };
 });
 
+// add controller ( loginController <---> login.html )
+app.controller('loginController', function ($scope, $http, $location, $window){
+    
+    // check cookie
+    $http.get('/getCookie').success(function (data) {
+        var cookie = data;
+        console.log(cookie);
+        
+        if (cookie != "") {
+            $window.location.href = '#/page/1';
+        }
+    });
+
+    // HTTP request for checking admin's id and password
+    $scope.login = function (){
+        $http.post('/login', $scope.formData).success(function (data) {
+            if (data == 1) {
+                $location.url('/page/1');
+            }
+            else {
+                alert('ID 또는 비밀번호가 일치하지 않습니다.');
+                $window.location.reload();
+            }
+        });
+    };
+});
+
 // add controller ( mainController <---> home.html )
 app.controller('mainController', function ($scope, $http, $location, $window, $routeParams) {
     
+    // check cookie
+    $http.get('/getCookie').success(function (data) {
+        var cookie = data;
+        console.log(cookie);
+        
+        if (cookie == "") {
+            $window.location.href = '#/';
+        }
+    });
+
     $scope.message = 'VIEW PAGE';
-    
+        
     var recordCount = 0;
     var page = 1;
-    
+
     // HTTP request for getting total count of records
     $http.get('/getList').success(function (data) {
         recordCount = data.length;
@@ -102,6 +133,13 @@ app.controller('mainController', function ($scope, $http, $location, $window, $r
                 alert('삭제를 실패하였습니다.');
             });
         }
+    };
+    
+    // function for logout
+    $scope.logout = function () {
+        $http.get('/logout').success(function (data) {
+            $window.location.href = '#/';
+        });
     };
     
     // function for paging 
@@ -152,9 +190,20 @@ app.controller('mainController', function ($scope, $http, $location, $window, $r
     }
 });
 
+
 // add controller ( mainControllerBySearch <---> homeBySearch.html )
 app.controller('mainControllerBySearch', function ($scope, $http, $location, $window, $routeParams) {
     
+    // check cookie
+    $http.get('/getCookie').success(function (data) {
+        var cookie = data;
+        console.log(cookie);
+        
+        if (cookie == "") {
+            $window.location.href = '#/';
+        }
+    });
+
     $scope.message = 'VIEW PAGE';
     
     var recordCount = 0;
@@ -173,6 +222,13 @@ app.controller('mainControllerBySearch', function ($scope, $http, $location, $wi
     // function for searching 
     $scope.search = function () {
         $location.url('/page/search/' + $scope.formData.select + '/' + $scope.formData.search);
+    };
+    
+    // function for logout
+    $scope.logout = function () {
+        $http.get('/logout').success(function (data) {
+            $window.location.href = '#/';
+        });
     };
     
     // function for removing
@@ -198,8 +254,14 @@ app.controller('mainControllerBySearch', function ($scope, $http, $location, $wi
         var countOfPage = $window.Math.ceil(recordCount / countPerPage);
         
         if (page < 1 || page > countOfPage) {
-            alert('존재하지 않는 페이지입니다.');
-            $window.history.back();
+            if (countOfPage == 0) {
+                alert('검색된 결과가 없습니다.');
+                $window.history.back();
+            }
+            else {
+                alert('존재하지 않는 페이지입니다.');
+                $window.history.back();
+            }
         }
         
         var pagePerSection = 10;
@@ -237,9 +299,26 @@ app.controller('mainControllerBySearch', function ($scope, $http, $location, $wi
 });
 
 // add controller ( writeController <---> write.html )
-app.controller('writeController', function ($scope, $http, $location) {
+app.controller('writeController', function ($scope, $http, $location, $window) {
     
+    // check cookie
+    $http.get('/getCookie').success(function (data) {
+        var cookie = data;
+        console.log(cookie);
+        
+        if (cookie == "") {
+            $window.location.href = '#/';
+        }
+    });
+
     $scope.message = 'WRITE PAGE';
+    
+    // function for logout
+    $scope.logout = function () {
+        $http.get('/logout').success(function (data) {
+            $window.location.href = '#/';
+        });
+    };
     
     // function for writing
     $scope.writeID = function () {
@@ -248,7 +327,7 @@ app.controller('writeController', function ($scope, $http, $location) {
         // HTTP request for writing 
         $http.post('/write', $scope.formData).success(function (data) {
             alert('작성이 완료되었습니다.');
-            $location.url('/');
+            $location.url('/page/1');
         }).error(function (data) {
             alert('작성을 실패하였습니다.');
         });
@@ -256,8 +335,18 @@ app.controller('writeController', function ($scope, $http, $location) {
 });
 
 // add controller ( viewControllerByID <---> viewByID.html )
-app.controller('viewControllerByID', function ($scope, $http, $location, $routeParams) {
+app.controller('viewControllerByID', function ($scope, $http, $location, $window, $routeParams) {
     
+    // check cookie
+    $http.get('/getCookie').success(function (data) {
+        var cookie = data;
+        console.log(cookie);
+        
+        if (cookie == "") {
+            $window.location.href = '#/';
+        }
+    });
+
     $scope.message = 'VIEW BY ID PAGE';
     
     // HTTP request for getting results using ID
@@ -266,13 +355,20 @@ app.controller('viewControllerByID', function ($scope, $http, $location, $routeP
         $scope.result = data[0];
     });
     
+    // function for logout
+    $scope.logout = function () {
+        $http.get('/logout').success(function (data) {
+            $window.location.href = '#/';
+        });
+    };
+    
     // function for removing
     $scope.removeByID = function () {
         
         if (confirm('삭제를 하시겠습니까?')) {
             $http.get('/remove/' + $routeParams.id).success(function (data) {
                 alert('삭제가 완료되었습니다.');
-                $location.url('/');
+                $location.url('/page/1');
             }).error(function (data) {
                 alert('삭제를 실패하였습니다.');
             });
@@ -283,6 +379,16 @@ app.controller('viewControllerByID', function ($scope, $http, $location, $routeP
 // add controller ( updateController <---> update.html )
 app.controller('updateController', function ($scope, $http, $location, $window, $routeParams) {
     
+    // check cookie
+    $http.get('/getCookie').success(function (data) {
+        var cookie = data;
+        console.log(cookie);
+        
+        if (cookie == "") {
+            $window.location.href = '#/';
+        }
+    });
+
     $scope.message = 'UPDATE PAGE';
     
     // HTTP request for getting result using ID
@@ -290,6 +396,13 @@ app.controller('updateController', function ($scope, $http, $location, $window, 
         
         $scope.result = data[0];
     });
+    
+    // function for logout
+    $scope.logout = function () {
+        $http.get('/logout').success(function (data) {
+            $window.location.href = '#/';
+        });
+    };
     
     // function for updating
     $scope.update = function () {
@@ -299,7 +412,7 @@ app.controller('updateController', function ($scope, $http, $location, $window, 
         if (confirm('수정을 하시겠습니까?')) {
             $http.post('/update', $scope.result).success(function (data) {
                 alert('수정이 완료되었습니다.');
-                $window.location.href = '#/view/' + $routeParams.id;
+                $location.url('/page/1')
             }).error(function (data) {
                 alert('수정을 실패하였습니다.');
             });

@@ -14,8 +14,9 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-//app.engine('html', require('ejs').renderFile);
+//app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -61,7 +62,8 @@ var routeConfig = require('./routes/routeConfig.js');
 new routeConfig(app);
 
 // server listen 8080 port
-app.listen(8080);
-console.log('Server is listening at 8080 port !!!');
+app.listen(8080, function () {
+    console.log('Server is listening at 8080 port !!!');
+});
 
 module.exports = app;

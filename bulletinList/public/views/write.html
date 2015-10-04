@@ -1,58 +1,78 @@
 <!-- write.html -->
+<header>
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li><a href="#/page/1" data-toggle="tab">Home</a></li>
+            <li><a href="#/write" data-toggle="tab">글쓰기</a></li>
+            <li class="col-md-offset-9"><a href="" ng-click="logout()" data-toggle="tab">Logout</a></li> 
+        </ul>
+    </div>
+</header>
+
 <div>
     <center>
-        <h1>Home Page</h1>
+        <h1>Home Page</h1> <br/>
 
         <p>	{{ message }}</p>
     </center>
     
     <div class="container">
-        <form class="form-horizontal" name="form" novalidate>
-            <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
-                <label for="inputTitle" class="col-md-3 control-label">제목</label>
-                <div class="col-md-6">
-                    <input type="text" class="form-control" id="title" name="title" ng-model='formData.title' placeholder="제목을 입력해주세요" ng-focus required>
-                    <p ng-show="form.title.$invalid && !form.title.$pristine" class="help-block">제목을 입력하세요.</p>
-                </div>
+        <div class="panel panel-info">
+
+            <div class="panel-heading">
+                <div class="panel-title"><strong>글쓰기</strong></div>
+            </div>  
+
+            <div class="panel-body" style="padding-top:30px">
+                <form class="form-horizontal" name="form" novalidate>
+                    <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
+                        <label for="inputTitle" class="col-md-3 control-label"><strong>제목</strong></label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="title" name="title" ng-model='formData.title' placeholder="제목을 입력해주세요" ng-focus required>
+                            <p ng-show="form.title.$invalid && !form.title.$pristine" class="help-block">제목을 입력하세요.</p>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="form-group" ng-class="{ 'has-error' : form.id.$invalid && !form.id.$pristine }">
+                        <label for="inputId" class="col-md-3 control-label"><strong>작성자</strong></label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="id" name="id" ng-model='formData.id' placeholder="ID를 입력해주세요" required>
+                            <p ng-show="form.id.$invalid && !form.id.$pristine" class='help-block'>ID를 입력하세요.</p>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="form-group" ng-class="{ 'has-error' : form.password.$invalid && !form.password.$pristine }">
+                        <label for="inputPassword" class="col-md-3 control-label"><strong>비밀번호</strong></label>
+                        <div class="col-md-6">
+                            <input type="password" class="form-control" id="password" name="password" ng-model="formData.password" placeholder=" 비밀번호를 입력해주세요" required>
+                            <p ng-show="form.password.$invalid && !form.password.$pristine" class='help-block'>Password를 입력하세요.</p>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="form-group" ng-class="{ 'has-error' : form.content.$invalid && !form.content.$pristine }">
+                        <label for="inputContent" class="col-md-3 control-label"><strong>내용</strong></label>
+                        <div class="col-md-6">
+                            <textarea class="form-control" rows="10" cols="5" name='content' ng-model='formData.content' placeholder='내용을 입력하세요' required></textarea>
+                            <p ng-show="form.content.$invalid && !form.content.$pristine" class='help-block'>내용을 입력하세요.</p>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-offset-8 col-md-2">
+                            <button type="button" class="btn btn-primary col-md-4" ng-click="writeID()" ng-disabled="!form.$valid">작성</button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
-
-            <br />
-
-            <div class="form-group" ng-class="{ 'has-error' : form.id.$invalid && !form.id.$pristine }">
-                <label for="inputId" class="col-md-3 control-label">작성자</label>
-                <div class="col-md-6">
-                    <input type="text" class="form-control" id="id" name="id" ng-model='formData.id' placeholder="ID를 입력해주세요" required>
-                    <p ng-show="form.id.$invalid && !form.id.$pristine" class='help-block'>ID를 입력하세요.</p>
-                </div>
-            </div>
-
-            <br />
-
-            <div class="form-group" ng-class="{ 'has-error' : form.password.$invalid && !form.password.$pristine }">
-                <label for="inputPassword" class="col-md-3 control-label">비밀번호</label>
-                <div class="col-md-6">
-                    <input type="password" class="form-control" id="password" name="password" ng-model="formData.password" placeholder=" 비밀번호를 입력해주세요" required>
-                    <p ng-show="form.password.$invalid && !form.password.$pristine" class='help-block'>Password를 입력하세요.</p>
-                </div>
-            </div>
-
-            <br />
-
-            <div class="form-group" ng-class="{ 'has-error' : form.content.$invalid && !form.content.$pristine }">
-                <label for="inputContent" class="col-md-3 control-label">내용</label>
-                <div class="col-md-6">
-                    <textarea class="form-control" rows="10" cols="5" name='content' ng-model='formData.content' placeholder='내용을 입력하세요' required></textarea>
-                    <p ng-show="form.content.$invalid && !form.content.$pristine" class='help-block'>내용을 입력하세요.</p>
-                </div>
-            </div>
-            
-            <br />
-
-            <div class="row">
-                <div class="col-md-offset-8 col-md-2">
-                    <button type="button" class="btn btn-primary col-md-4" ng-click="writeID()" ng-disabled="!form.$valid">작성</button> 
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
